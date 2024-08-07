@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import prisma from "@/lib/prisma";
-import { Loader2 } from "lucide-react";
 import UserAvatar from "./userAvatar";
 import FollowButton from "./followBtn";
+import { Loader2 } from "lucide-react";
+import UserTooltip from "./userTooltip";
 import { validateRequest } from "@/auth";
+import TrendingInfo from "./trendingInfo";
 import { formatNumber } from "@/lib/utils";
 import { unstable_cache } from "next/cache";
 import { getUserDataSelect } from "@/lib/types";
-import UserTooltip from "./userTooltip";
-import TrendingInfo from "./trendingInfo";
 
 export default function TrendsSidebar() {
   return (
@@ -39,7 +39,7 @@ async function WhoToFollow() {
       },
     },
     select: getUserDataSelect(user.id),
-    take: 5,
+    take: 3,
   });
 
   return (

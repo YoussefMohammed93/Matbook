@@ -1,7 +1,7 @@
 "use client";
 
-import { PasswordInput } from "@/components/ui/passwordInput";
 import LoadingButton from "@/components/ui/loadingBtn";
+import { PasswordInput } from "@/components/ui/passwordInput";
 import {
   Form,
   FormControl,
@@ -10,12 +10,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { loginSchema, LoginValues } from "@/lib/validation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
 import { login } from "./actions";
+import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { useState, useTransition } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, LoginValues } from "@/lib/validation";
 
 export default function LoginForm() {
   const [error, setError] = useState<string>();
@@ -40,7 +40,7 @@ export default function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 pt-16">
         {error && <p className="text-center text-destructive">{error}</p>}
         <FormField
           control={form.control}
