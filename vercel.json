@@ -20,5 +20,10 @@
   ],
   "env": {
     "YOUR_ENV_VARIABLE": "POSTGRES_URL"
+  },
+  "build": {
+    "env": {
+      "NPM_FLAGS": "--legacy-peer-deps"
+    }
   }
 }
