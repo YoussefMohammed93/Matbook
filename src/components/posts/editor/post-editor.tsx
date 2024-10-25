@@ -35,7 +35,7 @@ export default function PostEditor() {
   }
 
   return (
-    <div className="flex flex-col gap-5 rounded-sm bg-card p-5 shadow-sm">
+    <div className="flex flex-col gap-5 border rounded-sm bg-card p-5 shadow-sm">
       <div className="flex gap-5">
         <UserAvatar avatarUrl={user.avatarUrl} className="hidden sm:inline" />
         <EditorContent
