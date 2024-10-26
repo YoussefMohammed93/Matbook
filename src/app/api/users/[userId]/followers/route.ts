@@ -1,12 +1,10 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 import { validateRequest } from "@/auth";
 import { FollowerInfo } from "@/lib/types";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+// Handles GET requests
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { user: loggedInUser } = await validateRequest();
 
@@ -45,6 +43,63 @@ export default async function handler(
     };
 
     return res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+// Handles POST requests
+export async function POST(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const { user: loggedInUser } = await validateRequest();
+
+    if (!loggedInUser) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const userId = req.query.userId as string;
+
+    await prisma.follow.upsert({
+      where: {
+        followerId_followingId: {
+          followerId: loggedInUser.id,
+          followingId: userId,
+        },
+      },
+      create: {
+        followerId: loggedInUser.id,
+        followingId: userId,
+      },
+      update: {},
+    });
+
+    return res.status(200).send("Follow successful");
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+// Handles DELETE requests
+export async function DELETE(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const { user: loggedInUser } = await validateRequest();
+
+    if (!loggedInUser) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const userId = req.query.userId as string;
+
+    await prisma.follow.deleteMany({
+      where: {
+        followerId: loggedInUser.id,
+        followingId: userId,
+      },
+    });
+
+    return res.status(200).send("Unfollow successful");
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
