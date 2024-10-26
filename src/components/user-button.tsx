@@ -16,8 +16,8 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import UserAvatar from "./user-avatar";
-import { useEffect, useState } from "react";
 import { logout } from "@/app/(auth)/actions";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/app/(main)/session-provider";
 import { Check, LogOutIcon, Monitor, Moon, Sun, UserIcon } from "lucide-react";
 
@@ -27,17 +27,10 @@ interface UserButtonProps {
 
 export default function UserButton({ className }: UserButtonProps) {
   const { user } = useSession();
+
   const { theme, setTheme } = useTheme();
 
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
+  const queryClient = useQueryClient();
 
   return (
     <DropdownMenu>
@@ -83,6 +76,7 @@ export default function UserButton({ className }: UserButtonProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
+            queryClient.clear();
             logout();
           }}
         >
