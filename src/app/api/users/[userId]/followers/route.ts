@@ -1,21 +1,23 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 import { validateRequest } from "@/auth";
 import { FollowerInfo } from "@/lib/types";
-import { NextRequest, NextResponse } from "next/server";
 
-// GET Request handler to fetch followers information
-export async function GET(
-  req: NextRequest,
-  context: { params: { userId: string } }
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
 ) {
   try {
     const { user: loggedInUser } = await validateRequest();
+
     if (!loggedInUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return res.status(401).json({ error: "Unauthorized" });
     }
 
+    const userId = req.query.userId as string;
+
     const user = await prisma.user.findUnique({
-      where: { id: context.params.userId },
+      where: { id: userId },
       select: {
         followers: {
           where: {
@@ -34,83 +36,17 @@ export async function GET(
     });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return res.status(404).json({ error: "User not found" });
     }
 
     const data: FollowerInfo = {
       followers: user._count.followers,
-      isFollowedByUser: !!user.followers.length,
+      isFollowedByUser: user.followers.length > 0,
     };
 
-    return NextResponse.json(data);
+    return res.status(200).json(data);
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
-
-// POST Request handler to follow a user
-export async function POST(
-  req: NextRequest,
-  context: { params: { userId: string } }
-) {
-  try {
-    const { user: loggedInUser } = await validateRequest();
-    if (!loggedInUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    await prisma.follow.upsert({
-      where: {
-        followerId_followingId: {
-          followerId: loggedInUser.id,
-          followingId: context.params.userId,
-        },
-      },
-      create: {
-        followerId: loggedInUser.id,
-        followingId: context.params.userId,
-      },
-      update: {},
-    });
-
-    return new NextResponse(null, { status: 204 }); // Return 204 No Content
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE Request handler to unfollow a user
-export async function DELETE(
-  req: NextRequest,
-  context: { params: { userId: string } }
-) {
-  try {
-    const { user: loggedInUser } = await validateRequest();
-    if (!loggedInUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    await prisma.follow.deleteMany({
-      where: {
-        followerId: loggedInUser.id,
-        followingId: context.params.userId,
-      },
-    });
-
-    return new NextResponse(null, { status: 204 }); // Return 204 No Content
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return res.status(500).json({ error: "Internal server error" });
   }
 }
