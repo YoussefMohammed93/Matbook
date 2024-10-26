@@ -1,16 +1,17 @@
 "use client";
 
 import "./styles.css";
-import { submitPost } from "./actions";
 import StarterKit from "@tiptap/starter-kit";
-import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/user-avatar";
+import { useSubmitPostMutation } from "./mutations";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
+import LoadingButton from "@/components/ui/loading-button";
 import { useSession } from "@/app/(main)/session-provider";
 
 export default function PostEditor() {
   const { user } = useSession();
+  const mutation = useSubmitPostMutation();
 
   const editor = useEditor({
     extensions: [
@@ -19,7 +20,7 @@ export default function PostEditor() {
         italic: false,
       }),
       Placeholder.configure({
-        placeholder: "What's on your mind?",
+        placeholder: "What's in your mind?",
       }),
     ],
   });
@@ -29,28 +30,32 @@ export default function PostEditor() {
       blockSeparator: "\n",
     }) || "";
 
-  async function onSubmit() {
-    await submitPost(input);
-    editor?.commands.clearContent();
+  function onSubmit() {
+    mutation.mutate(input, {
+      onSuccess: () => {
+        editor?.commands.clearContent();
+      },
+    });
   }
 
   return (
-    <div className="flex flex-col gap-5 border rounded-sm bg-card p-5 shadow-sm">
+    <div className="flex flex-col gap-5 rounded-sm border bg-card p-5 shadow-sm">
       <div className="flex gap-5">
         <UserAvatar avatarUrl={user.avatarUrl} className="hidden sm:inline" />
         <EditorContent
           editor={editor}
-          className="max-h-[20rem] w-full overflow-y-auto rounded-sm bg-background px-5 py-3"
+          className="max-h-[20rem] w-full overflow-y-auto rounded-2xl bg-background px-5 py-3"
         />
       </div>
       <div className="flex justify-end">
-        <Button
+        <LoadingButton
           onClick={onSubmit}
+          loading={mutation.isPending}
           disabled={!input.trim()}
           className="min-w-20"
         >
           Post
-        </Button>
+        </LoadingButton>
       </div>
     </div>
   );
