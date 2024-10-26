@@ -4,10 +4,8 @@ import { FollowerInfo } from "@/lib/types";
 
 export async function GET(
   req: Request,
-  context: { params: { userId: string } }
+  { params: { userId } }: { params: { userId: string } }
 ) {
-  const { userId } = context.params;
-
   try {
     const { user: loggedInUser } = await validateRequest();
 
@@ -52,10 +50,8 @@ export async function GET(
 
 export async function POST(
   req: Request,
-  context: { params: { userId: string } }
+  { params: { userId } }: { params: { userId: string } }
 ) {
-  const { userId } = context.params;
-
   try {
     const { user: loggedInUser } = await validateRequest();
 
@@ -86,10 +82,8 @@ export async function POST(
 
 export async function DELETE(
   req: Request,
-  context: { params: { userId: string } }
+  { params: { userId } }: { params: { userId: string } }
 ) {
-  const { userId } = context.params;
-
   try {
     const { user: loggedInUser } = await validateRequest();
 
