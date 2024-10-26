@@ -77,7 +77,7 @@ export async function POST(
       update: {},
     });
 
-    return new NextResponse(null, { status: 200 });
+    return NextResponse.json(null, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
@@ -105,7 +105,7 @@ export async function DELETE(
       },
     });
 
-    return new NextResponse(null, { status: 200 });
+    return NextResponse.json(null, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
