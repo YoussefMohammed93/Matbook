@@ -1,11 +1,10 @@
 import prisma from "@/lib/prisma";
 import { validateRequest } from "@/auth";
 import { FollowerInfo } from "@/lib/types";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-// GET Request handler to fetch followers information
 export async function GET(
-  req: NextRequest,
+  _: Request,
   { params }: { params: { userId: string } }
 ) {
   try {
@@ -52,9 +51,8 @@ export async function GET(
   }
 }
 
-// POST Request handler to follow a user
 export async function POST(
-  req: NextRequest,
+  _: Request,
   { params }: { params: { userId: string } }
 ) {
   try {
@@ -77,7 +75,7 @@ export async function POST(
       update: {},
     });
 
-    return new NextResponse(null, { status: 204 }); // Return 204 No Content
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
@@ -87,9 +85,8 @@ export async function POST(
   }
 }
 
-// DELETE Request handler to unfollow a user
 export async function DELETE(
-  req: NextRequest,
+  _: Request,
   { params }: { params: { userId: string } }
 ) {
   try {
@@ -105,7 +102,7 @@ export async function DELETE(
       },
     });
 
-    return new NextResponse(null, { status: 204 }); // Return 204 No Content
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
