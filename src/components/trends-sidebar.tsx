@@ -1,13 +1,13 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import prisma from "@/lib/prisma";
-import { Button } from "./ui/button";
+import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import UserAvatar from "./user-avatar";
 import { validateRequest } from "@/auth";
+import FollowButton from "./follow-button";
 import { formatNumber } from "@/lib/utils";
 import { unstable_cache } from "next/cache";
-import { userDataSelect } from "@/lib/types";
+import { getUserDataSelect } from "@/lib/types";
 
 export default function TrendsSidebar() {
   return (
@@ -30,14 +30,19 @@ async function WhoToFollow() {
       NOT: {
         id: user.id,
       },
+      followers: {
+        none: {
+          followerId: user.id,
+        },
+      },
     },
-    select: userDataSelect,
+    select: getUserDataSelect(user.id),
     take: 5,
   });
 
   return (
     <div className="space-y-5 rounded-sm border bg-card p-5 shadow-sm">
-      <div className="text-lg font-semibold">People you may know</div>
+      <div className="text-xl font-bold">Who to follow</div>
       {usersToFollow.map((user) => (
         <div key={user.id} className="flex items-center justify-between gap-3">
           <Link
@@ -54,7 +59,15 @@ async function WhoToFollow() {
               </p>
             </div>
           </Link>
-          <Button>Follow</Button>
+          <FollowButton
+            userId={user.id}
+            initialState={{
+              followers: user._count.followers,
+              isFollowedByUser: user.followers.some(
+                ({ followerId }) => followerId === user.id
+              ),
+            }}
+          />
         </div>
       ))}
     </div>
@@ -68,7 +81,7 @@ const getTrendingTopics = unstable_cache(
             FROM posts
             GROUP BY (hashtag)
             ORDER BY count DESC, hashtag ASC
-            LIMIT 3
+            LIMIT 5
         `;
 
     return result.map((row) => ({
@@ -87,7 +100,7 @@ async function TrendingTopics() {
 
   return (
     <div className="space-y-5 rounded-sm border bg-card p-5 shadow-sm">
-      <div className="text-lg font-semibold">Trending topics</div>
+      <div className="text-xl font-bold">Trending topics</div>
       {trendingTopics.map(({ hashtag, count }) => {
         const title = hashtag.split("#")[1];
 
