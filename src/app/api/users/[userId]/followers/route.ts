@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params: { userId } }: { params: { userId: string } }
+  context: { params: { userId: string } }
 ) {
   try {
     const { user: loggedInUser } = await validateRequest();
@@ -13,6 +13,8 @@ export async function GET(
     if (!loggedInUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { userId } = context.params;
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -54,7 +56,7 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params: { userId } }: { params: { userId: string } }
+  context: { params: { userId: string } }
 ) {
   try {
     const { user: loggedInUser } = await validateRequest();
@@ -62,6 +64,8 @@ export async function POST(
     if (!loggedInUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { userId } = context.params;
 
     await prisma.$transaction([
       prisma.follow.upsert({
@@ -91,7 +95,7 @@ export async function POST(
 
 export async function DELETE(
   req: NextRequest,
-  { params: { userId } }: { params: { userId: string } }
+  context: { params: { userId: string } }
 ) {
   try {
     const { user: loggedInUser } = await validateRequest();
@@ -99,6 +103,8 @@ export async function DELETE(
     if (!loggedInUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const { userId } = context.params;
 
     await prisma.$transaction([
       prisma.follow.deleteMany({
