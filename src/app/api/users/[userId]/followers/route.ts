@@ -3,8 +3,9 @@ import { validateRequest } from "@/auth";
 import { FollowerInfo } from "@/lib/types";
 import { NextResponse } from "next/server";
 
+// GET Request handler to fetch followers information
 export async function GET(
-  _: Request,
+  req: Request,
   { params }: { params: { userId: string } }
 ) {
   try {
@@ -51,8 +52,9 @@ export async function GET(
   }
 }
 
+// POST Request handler to follow a user
 export async function POST(
-  _: Request,
+  req: Request,
   { params }: { params: { userId: string } }
 ) {
   try {
@@ -75,7 +77,7 @@ export async function POST(
       update: {},
     });
 
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 204 }); // Return 204 No Content
   } catch (error) {
     console.error(error);
     return NextResponse.json(
@@ -85,8 +87,9 @@ export async function POST(
   }
 }
 
+// DELETE Request handler to unfollow a user
 export async function DELETE(
-  _: Request,
+  req: Request,
   { params }: { params: { userId: string } }
 ) {
   try {
@@ -102,7 +105,7 @@ export async function DELETE(
       },
     });
 
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 204 }); // Return 204 No Content
   } catch (error) {
     console.error(error);
     return NextResponse.json(
