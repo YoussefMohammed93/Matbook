@@ -19,7 +19,6 @@ import { signUp } from "./actions";
 
 export default function SignUpForm() {
   const [error, setError] = useState<string>();
-  const [errorType, setErrorType] = useState<string>(); // State for error type
 
   const [isPending, startTransition] = useTransition();
 
@@ -34,25 +33,16 @@ export default function SignUpForm() {
 
   async function onSubmit(values: SignUpValues) {
     setError(undefined);
-    setErrorType(undefined); // Clear error type
     startTransition(async () => {
-      const { error, errorType } = await signUp(values);
-      if (error) {
-        setError(error);
-        setErrorType(errorType); // Set the error type for displaying later
-      }
+      const { error } = await signUp(values);
+      if (error) setError(error);
     });
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-        {error && (
-          <p className="text-center text-destructive">
-            {errorType ? `Error Type: ${errorType}` : ""} - {error}{" "}
-            {/* Display error type */}
-          </p>
-        )}
+        {error && <p className="text-center text-destructive">{error}</p>}
         <FormField
           control={form.control}
           name="username"
