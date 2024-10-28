@@ -162,7 +162,7 @@ function CommentButton({ post }: CommentButtonProps) {
         </button>
       </DialogTrigger>
       <DialogContent
-        className="max-h-[90vh] overflow-y-auto"
+        className="scrollbar-thumb-green max-h-[90vh] overflow-y-auto"
         style={{ scrollbarWidth: "thin" }}
       >
         <DialogHeader>
