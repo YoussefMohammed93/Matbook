@@ -80,8 +80,8 @@ async function UserInfoSidebar({ user }: UserInfoSidebarProps) {
   if (!loggedInUser) return null;
 
   return (
-    <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm">
-      <div className="text-xl font-bold">About this user</div>
+    <div className="space-y-5 rounded-md border bg-card p-5 shadow-sm">
+      <div className="text-lg font-semibold">About this user</div>
       <UserTooltip user={user}>
         <Link
           href={`/users/${user.username}`}

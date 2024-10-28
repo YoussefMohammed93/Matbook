@@ -31,6 +31,7 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Resizer from "react-image-file-resizer";
 import { useUpdateProfileMutation } from "./mutations";
+import { useToast } from "@/components/ui/use-toast";
 
 interface EditProfileDialogProps {
   user: UserData;
@@ -52,6 +53,7 @@ export default function EditProfileDialog({
   });
 
   const mutation = useUpdateProfileMutation();
+  const { toast } = useToast();
 
   const [croppedAvatar, setCroppedAvatar] = useState<Blob | null>(null);
 
@@ -69,6 +71,24 @@ export default function EditProfileDialog({
         onSuccess: () => {
           setCroppedAvatar(null);
           onOpenChange(false);
+
+          const changes = [];
+          if (values.displayName !== user.displayName) {
+            changes.push("Your name has been updated successfully.");
+          }
+          if (values.bio !== user.bio) {
+            changes.push("Your bio has been updated successfully.");
+          }
+          if (croppedAvatar) {
+            changes.push("Your avatar has been updated successfully.");
+          }
+
+          const message =
+            changes.length > 0
+              ? "Your profile has been updated successfully."
+              : "No changes were made.";
+
+          toast({ description: message });
         },
       },
     );

@@ -43,7 +43,7 @@ export default function PostEditor() {
         italic: false,
       }),
       Placeholder.configure({
-        placeholder: "What's in your mind?",
+        placeholder: `What's on your mind, ${user?.displayName || user?.username}?`,
       }),
     ],
   });

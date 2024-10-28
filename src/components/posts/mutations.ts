@@ -40,7 +40,7 @@ export function useDeletePostMutation() {
       );
 
       toast({
-        description: "Post deleted",
+        description: "Post has been successfully deleted.",
       });
 
       if (pathname === `/posts/${deletedPost.id}`) {
@@ -51,7 +51,7 @@ export function useDeletePostMutation() {
       console.error(error);
       toast({
         variant: "destructive",
-        description: "Failed to delete post. Please try again.",
+        description: "Failed to delete post, Please try again.",
       });
     },
   });

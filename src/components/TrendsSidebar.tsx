@@ -2,13 +2,19 @@ import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
 import { getUserDataSelect } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+import { InfoIcon, Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import { Suspense } from "react";
 import FollowButton from "./FollowButton";
 import UserAvatar from "./UserAvatar";
 import UserTooltip from "./UserTooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 export default function TrendsSidebar() {
   return (
@@ -43,7 +49,7 @@ async function WhoToFollow() {
 
   return (
     <div className="space-y-5 rounded-md border bg-card p-5 shadow-sm">
-      <div className="text-lg font-semibold">Who to follow</div>
+      <div className="text-lg font-semibold">People you may know</div>
       {usersToFollow.map((user) => (
         <div key={user.id} className="flex items-center justify-between gap-3">
           <UserTooltip user={user}>
@@ -103,7 +109,21 @@ async function TrendingTopics() {
 
   return (
     <div className="space-y-5 rounded-md border bg-card p-5 shadow-sm">
-      <div className="text-lg font-semibold">Trending topics</div>
+      <TooltipProvider>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Trending topics</h2>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <InfoIcon />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="border p-3 shadow-md">
+              <p>This is updated instantly every 3 hours.</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </TooltipProvider>
       {trendingTopics.map(({ hashtag, count }) => {
         const title = hashtag.split("#")[1];
 

@@ -60,14 +60,14 @@ export function useSubmitPostMutation() {
       });
 
       toast({
-        description: "Post created",
+        description: "Post has been published successfully.",
       });
     },
     onError(error) {
       console.error(error);
       toast({
         variant: "destructive",
-        description: "Failed to post. Please try again.",
+        description: "Failed to publish this post, Please try again.",
       });
     },
   });

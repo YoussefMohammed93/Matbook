@@ -15,7 +15,7 @@ export default function Notification({ notification }: NotificationProps) {
     { message: string; icon: JSX.Element; href: string }
   > = {
     FOLLOW: {
-      message: ` followed you`,
+      message: ` started following you`,
       icon: <User2 className="size-7 text-primary" />,
       href: `/users/${notification.issuer.username}`,
     },
