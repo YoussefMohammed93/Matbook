@@ -30,11 +30,28 @@ export function getUserDataSelect(loggedInUserId: string): Prisma.UserSelect {
     likes: {
       select: {
         userId: true,
+        postId: true,
+      },
+    },
+    bookmarks: {
+      select: {
+        userId: true,
+        postId: true,
+        createdAt: true,
+      },
+    },
+    comments: {
+      select: {
+        id: true,
+        content: true,
+        postId: true,
+        createdAt: true,
       },
     },
     commentLikes: {
       select: {
         userId: true,
+        commentId: true,
       },
     },
   };
@@ -44,7 +61,7 @@ export type UserData = Prisma.UserGetPayload<{
   select: ReturnType<typeof getUserDataSelect>;
 }>;
 
-export function getPostDataInclude(loggedInUserId: string): Prisma.PostInclude {
+export function getPostDataInclude(loggedInUserId: string) {
   return {
     user: {
       select: getUserDataSelect(loggedInUserId),
@@ -72,7 +89,7 @@ export function getPostDataInclude(loggedInUserId: string): Prisma.PostInclude {
         comments: true,
       },
     },
-  };
+  } satisfies Prisma.PostInclude;
 }
 
 export type PostData = Prisma.PostGetPayload<{
@@ -102,6 +119,11 @@ export function getCommentDataInclude(
 export type CommentData = Prisma.CommentGetPayload<{
   include: ReturnType<typeof getCommentDataInclude>;
 }>;
+
+export interface CommentsPage {
+  comments: CommentData[];
+  previousCursor: string | null;
+}
 
 export interface PostsPage {
   posts: PostData[];
@@ -143,4 +165,9 @@ export interface BookmarkInfo {
 
 export interface NotificationCountInfo {
   unreadCount: number;
+}
+
+export interface NotificationsPage {
+  notifications: NotificationData[];
+  nextCursor: string | null;
 }
