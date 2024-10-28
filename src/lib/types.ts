@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-export function getUserDataSelect(loggedInUserId: string) {
+export function getUserDataSelect(loggedInUserId: string): Prisma.UserSelect {
   return {
     id: true,
     username: true,
@@ -8,6 +8,8 @@ export function getUserDataSelect(loggedInUserId: string) {
     avatarUrl: true,
     bio: true,
     createdAt: true,
+    email: true,
+    passwordHash: true,
     followers: {
       where: {
         followerId: loggedInUserId,
@@ -20,16 +22,29 @@ export function getUserDataSelect(loggedInUserId: string) {
       select: {
         posts: true,
         followers: true,
+        likes: true,
+        comments: true,
+        commentLikes: true,
       },
     },
-  } satisfies Prisma.UserSelect;
+    likes: {
+      select: {
+        userId: true,
+      },
+    },
+    commentLikes: {
+      select: {
+        userId: true,
+      },
+    },
+  };
 }
 
 export type UserData = Prisma.UserGetPayload<{
   select: ReturnType<typeof getUserDataSelect>;
 }>;
 
-export function getPostDataInclude(loggedInUserId: string) {
+export function getPostDataInclude(loggedInUserId: string): Prisma.PostInclude {
   return {
     user: {
       select: getUserDataSelect(loggedInUserId),
@@ -57,11 +72,35 @@ export function getPostDataInclude(loggedInUserId: string) {
         comments: true,
       },
     },
-  } satisfies Prisma.PostInclude;
+  };
 }
 
 export type PostData = Prisma.PostGetPayload<{
   include: ReturnType<typeof getPostDataInclude>;
+}>;
+
+export function getCommentDataInclude(
+  loggedInUserId: string,
+): Prisma.CommentInclude {
+  return {
+    user: {
+      select: getUserDataSelect(loggedInUserId),
+    },
+    likes: {
+      select: {
+        userId: true,
+      },
+    },
+    _count: {
+      select: {
+        likes: true,
+      },
+    },
+  };
+}
+
+export type CommentData = Prisma.CommentGetPayload<{
+  include: ReturnType<typeof getCommentDataInclude>;
 }>;
 
 export interface PostsPage {
@@ -69,24 +108,7 @@ export interface PostsPage {
   nextCursor: string | null;
 }
 
-export function getCommentDataInclude(loggedInUserId: string) {
-  return {
-    user: {
-      select: getUserDataSelect(loggedInUserId),
-    },
-  } satisfies Prisma.CommentInclude;
-}
-
-export type CommentData = Prisma.CommentGetPayload<{
-  include: ReturnType<typeof getCommentDataInclude>;
-}>;
-
-export interface CommentsPage {
-  comments: CommentData[];
-  previousCursor: string | null;
-}
-
-export const notificationsInclude = {
+export const notificationsInclude: Prisma.NotificationInclude = {
   issuer: {
     select: {
       username: true,
@@ -99,16 +121,11 @@ export const notificationsInclude = {
       content: true,
     },
   },
-} satisfies Prisma.NotificationInclude;
+};
 
 export type NotificationData = Prisma.NotificationGetPayload<{
   include: typeof notificationsInclude;
 }>;
-
-export interface NotificationsPage {
-  notifications: NotificationData[];
-  nextCursor: string | null;
-}
 
 export interface FollowerInfo {
   followers: number;

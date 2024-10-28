@@ -26,6 +26,7 @@ model User {
   comments              Comment[]
   receivedNotifications Notification[] @relation("Recipient")
   issuedNotifications   Notification[] @relation("Issuer")
+  commentLikes          CommentLike[]
 
   createdAt DateTime @default(now())
 
@@ -85,12 +86,13 @@ enum MediaType {
 }
 
 model Comment {
-  id      String @id @default(cuid())
+  id      String        @id @default(cuid())
   content String
   userId  String
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   postId  String
-  post    Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post    Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  likes   CommentLike[]
 
   createdAt DateTime @default(now())
 
@@ -105,6 +107,17 @@ model Like {
 
   @@unique([userId, postId])
   @@map("likes")
+}
+
+model CommentLike {
+  id        String  @id @default(cuid())
+  commentId String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId])
+  @@map("comment_likes")
 }
 
 model Bookmark {
