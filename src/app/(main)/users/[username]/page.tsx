@@ -65,7 +65,7 @@ export default async function Page({ params: { username } }: PageProps) {
     <main className="flex w-full min-w-0 gap-5">
       <div className="w-full min-w-0 space-y-5">
         <UserProfile user={user} loggedInUserId={loggedInUser.id} />
-        <div className="rounded-2xl bg-card p-5 shadow-sm">
+        <div className="rounded-md border bg-card p-5 shadow-sm">
           <h2 className="text-center text-2xl font-bold">
             {user.displayName}&apos;s posts
           </h2>
@@ -91,7 +91,7 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
   };
 
   return (
-    <div className="h-fit w-full space-y-5 rounded-2xl bg-card p-5 shadow-sm">
+    <div className="h-fit w-full space-y-5 rounded-md border bg-card p-5 shadow-sm">
       <UserAvatar
         avatarUrl={user.avatarUrl}
         size={250}
@@ -103,11 +103,11 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
             <h1 className="text-3xl font-bold">{user.displayName}</h1>
             <div className="text-muted-foreground">@{user.username}</div>
           </div>
-          <div>Member since {formatDate(user.createdAt, "MMM d, yyyy")}</div>
+          <div>Member since <span className="text-muted-foreground">{formatDate(user.createdAt, "MMM d, yyyy")}</span></div>
           <div className="flex items-center gap-3">
             <span>
-              Posts:{" "}
-              <span className="font-semibold">
+              Posts :
+              <span className="font-semibold ml-1">
                 {formatNumber(user._count.posts)}
               </span>
             </span>

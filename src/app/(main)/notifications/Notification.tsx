@@ -15,17 +15,17 @@ export default function Notification({ notification }: NotificationProps) {
     { message: string; icon: JSX.Element; href: string }
   > = {
     FOLLOW: {
-      message: `${notification.issuer.displayName} followed you`,
+      message: ` followed you`,
       icon: <User2 className="size-7 text-primary" />,
       href: `/users/${notification.issuer.username}`,
     },
     COMMENT: {
-      message: `${notification.issuer.displayName} commented on your post`,
+      message: ` commented on your post`,
       icon: <MessageCircle className="size-7 fill-primary text-primary" />,
       href: `/posts/${notification.postId}`,
     },
     LIKE: {
-      message: `${notification.issuer.displayName} liked your post`,
+      message: ` liked your post`,
       icon: <Heart className="size-7 fill-red-500 text-red-500" />,
       href: `/posts/${notification.postId}`,
     },
@@ -37,7 +37,7 @@ export default function Notification({ notification }: NotificationProps) {
     <Link href={href} className="block">
       <article
         className={cn(
-          "flex gap-3 rounded-2xl bg-card p-5 shadow-sm transition-colors hover:bg-card/70",
+          "flex gap-3 rounded-md border bg-card p-5 shadow-sm transition-colors hover:bg-card/70",
           !notification.read && "bg-primary/10",
         )}
       >
@@ -45,7 +45,7 @@ export default function Notification({ notification }: NotificationProps) {
         <div className="space-y-3">
           <UserAvatar avatarUrl={notification.issuer.avatarUrl} size={36} />
           <div>
-            <span className="font-bold">{notification.issuer.displayName}</span>{" "}
+            <span className="font-bold">{notification.issuer.displayName}</span>
             <span>{message}</span>
           </div>
           {notification.post && (
