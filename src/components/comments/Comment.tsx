@@ -14,7 +14,7 @@ export default function Comment({ comment }: CommentProps) {
   const { user } = useSession();
 
   return (
-    <div className="group/comment mb-2 flex gap-3 rounded-md border bg-secondary p-3">
+    <div className="group/comment mb-2 flex gap-3 rounded-md border bg-card p-3">
       <span className="inline">
         <Link href={`/users/${comment.user.username}`}>
           <UserAvatar avatarUrl={comment.user.avatarUrl} size={40} />

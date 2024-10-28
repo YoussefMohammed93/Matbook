@@ -37,10 +37,11 @@ export default function CommentInput({ post }: CommentInputProps) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         autoFocus
+        className="bg-card"
       />
       <Button
         type="submit"
-        variant="ghost"
+        variant="link"
         size="icon"
         disabled={!input.trim() || mutation.isPending}
       >
