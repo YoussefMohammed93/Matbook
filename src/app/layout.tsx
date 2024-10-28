@@ -1,12 +1,12 @@
-import { Toaster } from "@/components/ui/toaster";
-import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
-import localFont from "next/font/local";
-import { extractRouterConfig } from "uploadthing/server";
-import { fileRouter } from "./api/uploadthing/core";
 import "./globals.css";
+import type { Metadata } from "next";
+import localFont from "next/font/local";
+import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/toaster";
+import { fileRouter } from "./api/uploadthing/core";
 import ReactQueryProvider from "./ReactQueryProvider";
+import { extractRouterConfig } from "uploadthing/server";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -22,7 +22,8 @@ export const metadata: Metadata = {
     template: "%s | Matbook",
     default: "Matbook",
   },
-  description: "The social media app for powernerds",
+  description:
+    "Matbook – Connect, share, and collaborate with like-minded individuals. Discover a vibrant social platform designed for seamless interaction, community building, and creative expression.",
 };
 
 export default function RootLayout({

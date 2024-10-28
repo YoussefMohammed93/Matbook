@@ -1,7 +1,7 @@
+import Navbar from "./Navbar";
+import MenuBar from "./MenuBar";
 import { validateRequest } from "@/auth";
 import { redirect } from "next/navigation";
-import MenuBar from "./MenuBar";
-import Navbar from "./Navbar";
 import SessionProvider from "./SessionProvider";
 
 export default async function Layout({

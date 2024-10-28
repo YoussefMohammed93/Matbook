@@ -1,20 +1,20 @@
-import { validateRequest } from "@/auth";
-import prisma from "@/lib/prisma";
-import { getUserDataSelect } from "@/lib/types";
-import { formatNumber } from "@/lib/utils";
-import { InfoIcon, Loader2 } from "lucide-react";
-import { unstable_cache } from "next/cache";
-import Link from "next/link";
-import { Suspense } from "react";
-import FollowButton from "./FollowButton";
-import UserAvatar from "./UserAvatar";
-import UserTooltip from "./UserTooltip";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import Link from "next/link";
+import { Suspense } from "react";
+import prisma from "@/lib/prisma";
+import UserAvatar from "./UserAvatar";
+import UserTooltip from "./UserTooltip";
+import { validateRequest } from "@/auth";
+import FollowButton from "./FollowButton";
+import { formatNumber } from "@/lib/utils";
+import { unstable_cache } from "next/cache";
+import { getUserDataSelect } from "@/lib/types";
+import { InfoIcon, Loader2 } from "lucide-react";
 
 export default function TrendsSidebar() {
   return (

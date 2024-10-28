@@ -1,7 +1,7 @@
-import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
-import { createUploadthing, FileRouter } from "uploadthing/next";
+import { validateRequest } from "@/auth";
 import { UploadThingError, UTApi } from "uploadthing/server";
+import { createUploadthing, FileRouter } from "uploadthing/next";
 
 const f = createUploadthing();
 

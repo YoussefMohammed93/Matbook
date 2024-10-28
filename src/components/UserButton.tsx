@@ -1,12 +1,4 @@
 "use client";
-
-import { logout } from "@/app/(auth)/actions";
-import { useSession } from "@/app/(main)/SessionProvider";
-import { cn } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
-import { Check, LogOutIcon, Monitor, Moon, Sun, UserIcon } from "lucide-react";
-import { useTheme } from "next-themes";
-import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +11,14 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 import UserAvatar from "./UserAvatar";
+import { useTheme } from "next-themes";
+import { logout } from "@/app/(auth)/actions";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "@/app/(main)/SessionProvider";
+import { Check, LogOutIcon, Monitor, Moon, Sun, UserIcon } from "lucide-react";
 
 interface UserButtonProps {
   className?: string;

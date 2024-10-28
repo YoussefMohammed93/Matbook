@@ -1,7 +1,7 @@
-import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
-import { notificationsInclude, NotificationsPage } from "@/lib/types";
+import { validateRequest } from "@/auth";
 import { NextRequest } from "next/server";
+import { notificationsInclude, NotificationsPage } from "@/lib/types";
 
 export async function GET(req: NextRequest) {
   try {

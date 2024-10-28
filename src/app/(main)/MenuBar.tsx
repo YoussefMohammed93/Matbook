@@ -1,8 +1,8 @@
-import { validateRequest } from "@/auth";
-import { Button } from "@/components/ui/button";
-import prisma from "@/lib/prisma";
-import { Bookmark, Home } from "lucide-react";
 import Link from "next/link";
+import prisma from "@/lib/prisma";
+import { validateRequest } from "@/auth";
+import { Bookmark, Home } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import NotificationsButton from "./NotificationsButton";
 
 interface MenuBarProps {

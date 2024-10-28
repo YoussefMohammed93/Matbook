@@ -1,8 +1,8 @@
-import PostEditor from "@/components/posts/editor/PostEditor";
-import TrendsSidebar from "@/components/TrendsSidebar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import FollowingFeed from "./FollowingFeed";
 import ForYouFeed from "./ForYouFeed";
+import FollowingFeed from "./FollowingFeed";
+import TrendsSidebar from "@/components/TrendsSidebar";
+import PostEditor from "@/components/posts/editor/PostEditor";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Home() {
   return (

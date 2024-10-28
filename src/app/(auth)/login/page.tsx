@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="flex h-screen items-center justify-center p-5 bg-[#eee]">
+    <main className="flex h-screen items-center justify-center bg-[#eee] p-5">
       <div className="flex h-full max-h-[39rem] w-full max-w-[28rem] items-center justify-center overflow-hidden rounded-md border bg-card shadow-sm">
         <div className="w-full space-y-10 overflow-y-auto p-10">
           <h1 className="text-center text-3xl font-bold">Login to matbook</h1>

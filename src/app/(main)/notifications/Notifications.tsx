@@ -1,17 +1,17 @@
 "use client";
 
-import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
-import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
-import kyInstance from "@/lib/ky";
-import { NotificationsPage } from "@/lib/types";
 import {
   useInfiniteQuery,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import kyInstance from "@/lib/ky";
 import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import Notification from "./Notification";
+import { NotificationsPage } from "@/lib/types";
+import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
+import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
 
 export default function Notifications() {
   const {

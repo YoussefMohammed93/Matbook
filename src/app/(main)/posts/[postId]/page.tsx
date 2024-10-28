@@ -1,16 +1,16 @@
+import Link from "next/link";
+import { Metadata } from "next";
+import prisma from "@/lib/prisma";
+import { Loader2 } from "lucide-react";
+import { cache, Suspense } from "react";
 import { validateRequest } from "@/auth";
-import FollowButton from "@/components/FollowButton";
 import Linkify from "@/components/Linkify";
 import Post from "@/components/posts/Post";
+import { notFound } from "next/navigation";
 import UserAvatar from "@/components/UserAvatar";
 import UserTooltip from "@/components/UserTooltip";
-import prisma from "@/lib/prisma";
+import FollowButton from "@/components/FollowButton";
 import { getPostDataInclude, UserData } from "@/lib/types";
-import { Loader2 } from "lucide-react";
-import { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { cache, Suspense } from "react";
 
 interface PageProps {
   params: { postId: string };

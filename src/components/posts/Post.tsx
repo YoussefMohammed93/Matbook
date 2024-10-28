@@ -1,20 +1,20 @@
 "use client";
 
-import { useSession } from "@/app/(main)/SessionProvider";
-import { PostData } from "@/lib/types";
-import { cn, formatRelativeDate } from "@/lib/utils";
-import { Media } from "@prisma/client";
-import { MessageSquare } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import Comments from "../comments/Comments";
 import Linkify from "../Linkify";
-import UserAvatar from "../UserAvatar";
-import UserTooltip from "../UserTooltip";
-import BookmarkButton from "./BookmarkButton";
 import LikeButton from "./LikeButton";
+import UserAvatar from "../UserAvatar";
+import { PostData } from "@/lib/types";
+import { Media } from "@prisma/client";
+import UserTooltip from "../UserTooltip";
+import Comments from "../comments/Comments";
+import { MessageSquare } from "lucide-react";
+import BookmarkButton from "./BookmarkButton";
 import PostMoreButton from "./PostMoreButton";
+import { cn, formatRelativeDate } from "@/lib/utils";
+import { useSession } from "@/app/(main)/SessionProvider";
 
 interface PostProps {
   post: PostData;
@@ -155,8 +155,7 @@ function CommentButton({ post, onClick }: CommentButtonProps) {
     <button onClick={onClick} className="flex items-center gap-2">
       <MessageSquare className="size-5" />
       <span className="text-sm font-medium tabular-nums">
-        {post._count.comments}{" "}
-        <span className="inline">comments</span>
+        {post._count.comments} <span className="inline">comments</span>
       </span>
     </button>
   );

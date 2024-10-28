@@ -1,18 +1,18 @@
+import { cache } from "react";
+import { Metadata } from "next";
+import prisma from "@/lib/prisma";
+import UserPosts from "./UserPosts";
+import { formatDate } from "date-fns";
 import { validateRequest } from "@/auth";
+import { formatNumber } from "@/lib/utils";
+import { notFound } from "next/navigation";
+import Linkify from "@/components/Linkify";
+import UserAvatar from "@/components/UserAvatar";
+import EditProfileButton from "./EditProfileButton";
 import FollowButton from "@/components/FollowButton";
 import FollowerCount from "@/components/FollowerCount";
-import Linkify from "@/components/Linkify";
 import TrendsSidebar from "@/components/TrendsSidebar";
-import UserAvatar from "@/components/UserAvatar";
-import prisma from "@/lib/prisma";
 import { FollowerInfo, getUserDataSelect, UserData } from "@/lib/types";
-import { formatNumber } from "@/lib/utils";
-import { formatDate } from "date-fns";
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { cache } from "react";
-import EditProfileButton from "./EditProfileButton";
-import UserPosts from "./UserPosts";
 
 interface PageProps {
   params: { username: string };
@@ -103,11 +103,16 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
             <h1 className="text-3xl font-bold">{user.displayName}</h1>
             <div className="text-muted-foreground">@{user.username}</div>
           </div>
-          <div>Member since <span className="text-muted-foreground">{formatDate(user.createdAt, "MMM d, yyyy")}</span></div>
+          <div>
+            Member since{" "}
+            <span className="text-muted-foreground">
+              {formatDate(user.createdAt, "MMM d, yyyy")}
+            </span>
+          </div>
           <div className="flex items-center gap-3">
             <span>
               Posts :
-              <span className="font-semibold ml-1">
+              <span className="ml-1 font-semibold">
                 {formatNumber(user._count.posts)}
               </span>
             </span>

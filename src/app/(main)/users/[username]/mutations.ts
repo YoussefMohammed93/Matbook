@@ -1,15 +1,15 @@
-import { useToast } from "@/components/ui/use-toast";
-import { PostsPage } from "@/lib/types";
-import { useUploadThing } from "@/lib/uploadthing";
-import { UpdateUserProfileValues } from "@/lib/validation";
 import {
   InfiniteData,
   QueryFilters,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { PostsPage } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { updateUserProfile } from "./actions";
+import { useUploadThing } from "@/lib/uploadthing";
+import { useToast } from "@/components/ui/use-toast";
+import { UpdateUserProfileValues } from "@/lib/validation";
 
 export function useUpdateProfileMutation() {
   const { toast } = useToast();

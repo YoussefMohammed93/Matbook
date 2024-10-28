@@ -1,13 +1,13 @@
-import kyInstance from "@/lib/ky";
-import { BookmarkInfo } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import {
   QueryKey,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
+import kyInstance from "@/lib/ky";
 import { Bookmark } from "lucide-react";
+import { BookmarkInfo } from "@/lib/types";
 import { useToast } from "../ui/use-toast";
 
 interface BookmarkButtonProps {

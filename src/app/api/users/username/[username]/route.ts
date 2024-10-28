@@ -1,5 +1,5 @@
-import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
+import { validateRequest } from "@/auth";
 import { getUserDataSelect } from "@/lib/types";
 
 export async function GET(

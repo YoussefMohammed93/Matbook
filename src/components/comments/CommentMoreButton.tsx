@@ -1,13 +1,13 @@
-import { CommentData } from "@/lib/types";
-import { MoreHorizontal, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { CommentData } from "@/lib/types";
+import { MoreHorizontal, Trash2 } from "lucide-react";
 import DeleteCommentDialog from "./DeleteCommentDialog";
 
 interface CommentMoreButtonProps {

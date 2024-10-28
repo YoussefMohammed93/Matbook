@@ -1,5 +1,5 @@
-import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
+import { validateRequest } from "@/auth";
 import { NotificationCountInfo } from "@/lib/types";
 
 export async function GET() {
