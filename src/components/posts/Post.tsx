@@ -156,7 +156,7 @@ function CommentButton({ post, onClick }: CommentButtonProps) {
       <MessageSquare className="size-5" />
       <span className="text-sm font-medium tabular-nums">
         {post._count.comments}{" "}
-        <span className="hidden sm:inline">comments</span>
+        <span className="inline">comments</span>
       </span>
     </button>
   );
