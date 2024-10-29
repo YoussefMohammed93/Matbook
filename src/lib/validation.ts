@@ -7,7 +7,7 @@ const usernameValidator = z
   .max(30, "Username cannot be longer than 30 characters")
   .regex(
     /^[a-zA-Z0-9_-]+$/,
-    "Username can only contain letters, numbers, dashes (-), and underscores (_)",
+    "Username can only contain letters, numbers, dashes (-), and underscores (_) ",
   );
 
 const passwordValidator = z
@@ -63,4 +63,12 @@ export const createCommentSchema = z.object({
     .trim()
     .min(1, "Comment content is required")
     .max(1000, "Comment must be at most 1000 characters"),
+});
+
+export const createReplySchema = z.object({
+  content: z
+    .string()
+    .trim()
+    .min(1, "Reply content is required")
+    .max(1000, "Reply must be at most 1000 characters"),
 });

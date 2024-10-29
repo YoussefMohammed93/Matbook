@@ -66,7 +66,7 @@ export default function LikeButton({
   };
 
   return (
-    <div className="mt-2 flex items-center gap-2">
+    <div className="flex items-center gap-2">
       <button onClick={handleLikeToggle}>
         <Heart
           className={`size-5 ${isLiked ? "fill-current text-red-500" : ""}`}

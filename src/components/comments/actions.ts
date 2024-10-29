@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { validateRequest } from "@/auth";
-import { createCommentSchema } from "@/lib/validation";
+import { createCommentSchema, createReplySchema } from "@/lib/validation";
 import { getCommentDataInclude, PostData } from "@/lib/types";
 
 export async function submitComment({
@@ -63,4 +63,51 @@ export async function deleteComment(id: string) {
   });
 
   return deletedComment;
+}
+
+export async function submitReply({
+  commentId,
+  content,
+}: {
+  commentId: string;
+  content: string;
+}) {
+  const { user } = await validateRequest();
+
+  if (!user) throw new Error("Unauthorized");
+
+  const { content: validatedContent } = createReplySchema.parse({ content });
+
+  const newReply = await prisma.reply.create({
+    data: {
+      content: validatedContent,
+      commentId,
+      userId: user.id,
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  return newReply;
+}
+
+export async function deleteReply(replyId: string) {
+  const { user } = await validateRequest();
+
+  if (!user) throw new Error("Unauthorized");
+
+  const reply = await prisma.reply.findUnique({
+    where: { id: replyId },
+  });
+
+  if (!reply) throw new Error("Reply not found");
+
+  if (reply.userId !== user.id) throw new Error("Unauthorized");
+
+  const deletedReply = await prisma.reply.delete({
+    where: { id: replyId },
+  });
+
+  return deletedReply;
 }

@@ -110,3 +110,9 @@
     background-color: #138d40;
   }
 }
+
+@media (min-width: 640px) {
+  .post-dialog {
+    max-width: 650px !important;
+  }
+}

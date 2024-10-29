@@ -1,9 +1,12 @@
 import Link from "next/link";
-import LikeButton from "./like-button";
+import { useState } from "react";
+import ReplyForm from "./reply-form";
+import ReplyList from "./reply-list";
+import { Button } from "../ui/button";
 import UserAvatar from "../UserAvatar";
-import { CommentData } from "@/lib/types";
+import LikeButton from "./like-button";
 import { formatRelativeDate } from "@/lib/utils";
-import CommentMoreButton from "./CommentMoreButton";
+import { CommentData, ReplyData } from "@/lib/types";
 import { useSession } from "@/app/(main)/SessionProvider";
 
 interface CommentProps {
@@ -12,40 +15,56 @@ interface CommentProps {
 
 export default function Comment({ comment }: CommentProps) {
   const { user } = useSession();
+  const [showReplyForm, setShowReplyForm] = useState(false);
+  const [replies, setReplies] = useState<ReplyData[]>([]);
+
+  const toggleReplyForm = () => setShowReplyForm((prev) => !prev);
+
+  const addReply = (newReply: ReplyData) => {
+    setReplies((prev) => [...prev, newReply]);
+  };
 
   return (
-    <div className="group/comment mb-2 flex gap-3 rounded-md border bg-card p-3">
-      <span className="inline">
+    <div className="mb-2 flex w-full flex-col gap-3 rounded-md border bg-card p-3">
+      <div className="flex items-start gap-3">
         <Link href={`/users/${comment.user.username}`}>
           <UserAvatar avatarUrl={comment.user.avatarUrl} size={40} />
         </Link>
-      </span>
-      <div>
-        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm">
-          <Link
-            href={`/users/${comment.user.username}`}
-            className="text-base font-semibold hover:underline"
-          >
-            {comment.user.displayName}
-          </Link>
-          <span className="text-muted-foreground text-xs sm:text-sm">
-            {formatRelativeDate(comment.createdAt)}
-          </span>
+        <div className="flex-1">
+          <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:gap-2">
+            <Link
+              href={`/users/${comment.user.username}`}
+              className="font-semibold hover:underline"
+            >
+              {comment.user.displayName}
+            </Link>
+            <span className="text-xs text-muted-foreground">
+              {formatRelativeDate(comment.createdAt)}
+            </span>
+          </div>
+          <div className="mt-1">{comment.content}</div>
+          <div className="mt-2 flex items-center gap-2">
+            <LikeButton
+              commentId={comment.id}
+              initialLikeCount={comment._count.likes}
+              isInitiallyLiked={comment.likes.some(
+                (like) => like.userId === user?.id,
+              )}
+            />
+            <Button variant="link" onClick={toggleReplyForm}>
+              {comment._count.replies > 0
+                ? `Replies ( ${comment._count.replies} )`
+                : "Reply"}
+            </Button>
+          </div>
         </div>
-        <div className="mt-1">{comment.content}</div>
-        <LikeButton
-          commentId={comment.id}
-          initialLikeCount={comment._count.likes}
-          isInitiallyLiked={comment.likes.some(
-            (like) => like.userId === user?.id,
-          )}
-        />
       </div>
-      {comment.user.id === user.id && (
-        <CommentMoreButton
-          comment={comment}
-          className="ms-auto opacity-0 transition-opacity group-hover/comment:opacity-100"
-        />
+
+      {showReplyForm && (
+        <div className="w-full sm:pl-12">
+          <ReplyForm commentId={comment.id} onNewReply={addReply} />
+          <ReplyList commentId={comment.id} replies={replies} />
+        </div>
       )}
     </div>
   );

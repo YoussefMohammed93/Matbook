@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { NotificationData } from "@/lib/types";
 import UserAvatar from "@/components/UserAvatar";
 import { NotificationType } from "@prisma/client";
-import { Heart, MessageCircle, User2 } from "lucide-react";
+import { Heart, MessageCircle, User2, Reply } from "lucide-react";
 
 interface NotificationProps {
   notification: NotificationData;
@@ -22,12 +22,17 @@ export default function Notification({ notification }: NotificationProps) {
     COMMENT: {
       message: ` commented on your post`,
       icon: <MessageCircle className="size-7 fill-primary text-primary" />,
-      href: `/posts/${notification.postId}`,
+      href: `/posts/${notification.Post?.id}`,
     },
     LIKE: {
       message: ` liked your post`,
       icon: <Heart className="size-7 fill-red-500 text-red-500" />,
-      href: `/posts/${notification.postId}`,
+      href: `/posts/${notification.Post?.id}`,
+    },
+    REPLY: {
+      message: ` replied to your comment`,
+      icon: <Reply className="size-7 text-primary" />,
+      href: `/posts/${notification.Post?.id}/comments/${notification.commentId}`,
     },
   };
 
@@ -48,9 +53,9 @@ export default function Notification({ notification }: NotificationProps) {
             <span className="font-bold">{notification.issuer.displayName}</span>
             <span>{message}</span>
           </div>
-          {notification.post && (
+          {notification.Post && (
             <div className="line-clamp-3 whitespace-pre-line text-muted-foreground">
-              {notification.post.content}
+              {notification.Post.content}{" "}
             </div>
           )}
         </div>

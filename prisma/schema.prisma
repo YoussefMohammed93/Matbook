@@ -10,7 +10,7 @@ datasource db {
 }
 
 model User {
-  id                    String         @id
+  id                    String         @id @default(cuid())
   username              String         @unique
   displayName           String
   email                 String?        @unique
@@ -23,18 +23,18 @@ model User {
   followers             Follow[]       @relation("Followers")
   likes                 Like[]
   bookmarks             Bookmark[]
-  comments              Comment[]
+  comments              Comment[]      @relation("UserComments")
+  replies               Reply[]        @relation("UserReplies")
   commentLikes          CommentLike[]
   receivedNotifications Notification[] @relation("Recipient")
   issuedNotifications   Notification[] @relation("Issuer")
-
-  createdAt DateTime @default(now())
+  createdAt             DateTime       @default(now())
 
   @@map("users")
 }
 
 model Session {
-  id        String   @id
+  id        String   @id @default(cuid())
   userId    String
   expiresAt DateTime
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -60,22 +60,20 @@ model Post {
   attachments         Media[]
   likes               Like[]
   bookmarks           Bookmark[]
-  comments            Comment[]
+  comments            Comment[]      @relation("PostComments")
   linkedNotifications Notification[]
-
-  createdAt DateTime @default(now())
+  createdAt           DateTime       @default(now())
 
   @@map("posts")
 }
 
 model Media {
-  id     String    @id @default(cuid())
-  postId String?
-  post   Post?     @relation(fields: [postId], references: [id], onDelete: SetNull)
-  type   MediaType
-  url    String
-
-  createdAt DateTime @default(now())
+  id        String    @id @default(cuid())
+  postId    String?
+  post      Post?     @relation(fields: [postId], references: [id], onDelete: SetNull)
+  type      MediaType
+  url       String
+  createdAt DateTime  @default(now())
 
   @@map("post_media")
 }
@@ -86,17 +84,30 @@ enum MediaType {
 }
 
 model Comment {
-  id      String        @id @default(cuid())
-  content String
-  userId  String
-  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId  String
-  post    Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
-  likes   CommentLike[]
-
-  createdAt DateTime @default(now())
+  id           String         @id @default(cuid())
+  content      String
+  userId       String
+  user         User           @relation("UserComments", fields: [userId], references: [id], onDelete: Cascade)
+  postId       String
+  post         Post           @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
+  likes        CommentLike[]
+  replies      Reply[]        @relation("CommentReplies")
+  createdAt    DateTime       @default(now())
+  Notification Notification[]
 
   @@map("comments")
+}
+
+model Reply {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  user      User     @relation("UserReplies", fields: [userId], references: [id], onDelete: Cascade)
+  commentId String
+  comment   Comment  @relation("CommentReplies", fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("replies")
 }
 
 model Like {
@@ -122,12 +133,11 @@ model CommentLike {
 }
 
 model Bookmark {
-  id     String @id @default(cuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId String
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@unique([userId, postId])
@@ -140,12 +150,13 @@ model Notification {
   recipient   User             @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
   issuerId    String
   issuer      User             @relation("Issuer", fields: [issuerId], references: [id], onDelete: Cascade)
+  commentId   String?
+  comment     Comment?         @relation(fields: [commentId], references: [id], onDelete: Cascade)
   postId      String?
-  post        Post?            @relation(fields: [postId], references: [id], onDelete: Cascade)
+  Post        Post?            @relation(fields: [postId], references: [id])
   type        NotificationType
   read        Boolean          @default(false)
-
-  createdAt DateTime @default(now())
+  createdAt   DateTime         @default(now())
 
   @@map("notifications")
 }
@@ -154,4 +165,5 @@ enum NotificationType {
   LIKE
   FOLLOW
   COMMENT
+  REPLY
 }
