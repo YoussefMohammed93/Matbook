@@ -7,11 +7,11 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import LoadingButton from "../LoadingButton";
+import { Loader2 } from "lucide-react";
 import { ReplyData } from "@/lib/types";
 
 interface DeleteReplyDialogProps {
-  reply: ReplyData;
+  reply?: ReplyData;
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -19,7 +19,6 @@ interface DeleteReplyDialogProps {
 }
 
 export default function DeleteReplyDialog({
-  reply,
   open,
   onClose,
   onConfirm,
@@ -36,13 +35,9 @@ export default function DeleteReplyDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <LoadingButton
-            variant="destructive"
-            onClick={onConfirm}
-            loading={loading}
-          >
-            Delete
-          </LoadingButton>
+          <Button variant="destructive" onClick={onConfirm} disabled={loading}>
+            {loading ? <Loader2 className="size-5 animate-spin" /> : "Delete"}
+          </Button>
           <Button variant="outline" onClick={onClose} disabled={loading}>
             Cancel
           </Button>

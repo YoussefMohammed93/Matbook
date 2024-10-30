@@ -2,18 +2,20 @@ import Reply from "./Reply";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { ReplyData } from "@/lib/types";
+import { useToast } from "../ui/use-toast";
 import { useEffect, useState } from "react";
 import DeleteReplyDialog from "./DeleteReplyDialog";
-import { useDeleteReplyMutation } from "./mutations";
 
 interface ReplyListProps {
   commentId: string;
   replies: ReplyData[];
+  onDeleteReply: (replyId: string) => void;
 }
 
 export default function ReplyList({
   commentId,
   replies: initialReplies,
+  onDeleteReply,
 }: ReplyListProps) {
   const [fetchedReplies, setFetchedReplies] = useState<ReplyData[]>([]);
   const [loading, setLoading] = useState(false);
@@ -21,11 +23,9 @@ export default function ReplyList({
   const [replies, setReplies] = useState<ReplyData[]>(initialReplies);
   const [replyToDelete, setReplyToDelete] = useState<ReplyData | null>(null);
 
-  const MAX_REPLIES_DISPLAY = 5;
+  const { toast } = useToast();
 
-  const { mutateAsync: deleteReply, status: deleteStatus } =
-    useDeleteReplyMutation();
-  const isLoadingDelete = deleteStatus === "pending";
+  const MAX_REPLIES_DISPLAY = 5;
 
   useEffect(() => {
     const fetchReplies = async () => {
@@ -33,7 +33,6 @@ export default function ReplyList({
       const res = await fetch(`/api/comments/${commentId}/replies`);
       if (res.ok) {
         const data: ReplyData[] = await res.json();
-
         const newFetchedReplies = data.filter(
           (fetchedReply) =>
             !replies.some(
@@ -46,8 +45,7 @@ export default function ReplyList({
     };
 
     fetchReplies();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [commentId]);
+  }, [commentId, replies]);
 
   const combinedReplies = [...replies, ...fetchedReplies].reduce<ReplyData[]>(
     (acc, reply) => {
@@ -70,16 +68,21 @@ export default function ReplyList({
   const confirmDeleteReply = async () => {
     if (!replyToDelete) return;
     try {
-      await deleteReply({ replyId: replyToDelete.id, commentId });
+      setLoading(true);
+      await fetch(`/api/replies/${replyToDelete.id}`, { method: "DELETE" });
       setReplies((prevReplies) =>
         prevReplies.filter((reply) => reply.id !== replyToDelete.id),
       );
-      setFetchedReplies((prevFetchedReplies) =>
-        prevFetchedReplies.filter((reply) => reply.id !== replyToDelete.id),
-      );
+      onDeleteReply(replyToDelete.id);
       setReplyToDelete(null);
+
+      toast({
+        description: "Reply deleted successfully!",
+      });
     } catch (error) {
       console.error("Failed to delete reply:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,7 +101,7 @@ export default function ReplyList({
             <Reply
               key={reply.id}
               reply={reply}
-              onDelete={() => handleDeleteReply(reply)}
+              onRequestDelete={() => handleDeleteReply(reply)}
             />
           ))}
           {!showAll && combinedReplies.length > MAX_REPLIES_DISPLAY && (
@@ -109,15 +112,13 @@ export default function ReplyList({
         </>
       )}
 
-      {isLoadingDelete && <Loader2 className="size-5 animate-spin" />}
-
       {replyToDelete && (
         <DeleteReplyDialog
           reply={replyToDelete}
           open={!!replyToDelete}
           onClose={cancelDelete}
           onConfirm={confirmDeleteReply}
-          loading={isLoadingDelete}
+          loading={loading}
         />
       )}
     </div>

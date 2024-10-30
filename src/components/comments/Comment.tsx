@@ -6,9 +6,9 @@ import { Button } from "../ui/button";
 import UserAvatar from "../UserAvatar";
 import LikeButton from "./like-button";
 import { formatRelativeDate } from "@/lib/utils";
+import CommentMoreButton from "./CommentMoreButton";
 import { CommentData, ReplyData } from "@/lib/types";
 import { useSession } from "@/app/(main)/SessionProvider";
-import CommentMoreButton from "./CommentMoreButton";
 
 interface CommentProps {
   comment: CommentData;
@@ -18,11 +18,18 @@ export default function Comment({ comment }: CommentProps) {
   const { user } = useSession();
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replies, setReplies] = useState<ReplyData[]>([]);
+  const [replyCount, setReplyCount] = useState(comment._count.replies);
 
   const toggleReplyForm = () => setShowReplyForm((prev) => !prev);
 
   const addReply = (newReply: ReplyData) => {
     setReplies((prev) => [...prev, newReply]);
+    setReplyCount((prevCount) => prevCount + 1);
+  };
+
+  const deleteReply = (replyId: string) => {
+    setReplies((prev) => prev.filter((reply) => reply.id !== replyId));
+    setReplyCount((prevCount) => prevCount - 1);
   };
 
   return (
@@ -58,9 +65,7 @@ export default function Comment({ comment }: CommentProps) {
               )}
             />
             <Button variant="link" onClick={toggleReplyForm}>
-              {comment._count.replies > 0
-                ? `Replies ( ${comment._count.replies} )`
-                : "Reply"}
+              {replyCount > 0 ? `Replies ( ${replyCount} )` : "Reply"}
             </Button>
           </div>
         </div>
@@ -69,7 +74,11 @@ export default function Comment({ comment }: CommentProps) {
       {showReplyForm && (
         <div className="w-full sm:pl-12">
           <ReplyForm commentId={comment.id} onNewReply={addReply} />
-          <ReplyList commentId={comment.id} replies={replies} />
+          <ReplyList
+            commentId={comment.id}
+            replies={replies}
+            onDeleteReply={deleteReply}
+          />
         </div>
       )}
     </div>

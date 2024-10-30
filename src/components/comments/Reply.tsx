@@ -5,7 +5,6 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import Link from "next/link";
-import { useState } from "react";
 import { Button } from "../ui/button";
 import UserAvatar from "../UserAvatar";
 import { ReplyData } from "@/lib/types";
@@ -15,27 +14,11 @@ import { useSession } from "@/app/(main)/SessionProvider";
 
 interface ReplyProps {
   reply: ReplyData;
-  onDelete: () => void;
+  onRequestDelete: () => void;
 }
 
-export default function Reply({ reply, onDelete }: ReplyProps) {
+export default function Reply({ reply, onRequestDelete }: ReplyProps) {
   const { user } = useSession();
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
-  const handleDelete = () => {
-    if (!showDeleteDialog) {
-      setShowDeleteDialog(true);
-    }
-  };
-
-  const closeDeleteDialog = () => {
-    setShowDeleteDialog(false);
-  };
-
-  const handleConfirmDelete = () => {
-    onDelete();
-    closeDeleteDialog();
-  };
 
   return (
     <div className="flex gap-3">
@@ -53,7 +36,7 @@ export default function Reply({ reply, onDelete }: ReplyProps) {
           <span className="w-full text-xs text-muted-foreground">
             {formatRelativeDate(new Date(reply.createdAt))}
           </span>
-          {user.id == reply.userId && (
+          {user?.id === reply.userId && (
             <div className="flex w-full justify-end">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -62,7 +45,7 @@ export default function Reply({ reply, onDelete }: ReplyProps) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem onClick={onDelete}>
+                  <DropdownMenuItem onClick={onRequestDelete}>
                     <span className="flex items-center gap-3 text-destructive">
                       <Trash2 className="size-4" />
                       Delete
