@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import kyInstance from "@/lib/ky";
+import { useState, useEffect } from "react";
 import { NotificationData } from "@/lib/types";
 import UserAvatar from "@/components/UserAvatar";
 import { NotificationType } from "@prisma/client";
@@ -10,9 +12,11 @@ interface NotificationProps {
 }
 
 export default function Notification({ notification }: NotificationProps) {
+  const [isPostDeleted, setIsPostDeleted] = useState(false);
+
   const notificationTypeMap: Record<
     NotificationType,
-    { message: string; icon: JSX.Element; href: string }
+    { message: string; icon: JSX.Element; href: string | null }
   > = {
     FOLLOW: {
       message: ` started following you`,
@@ -22,24 +26,46 @@ export default function Notification({ notification }: NotificationProps) {
     COMMENT: {
       message: ` commented on your post`,
       icon: <MessageCircle className="size-7 fill-primary text-primary" />,
-      href: `/posts/${notification.postId}`,
+      href: notification.postId ? `/posts/${notification.postId}` : null,
     },
     LIKE: {
       message: ` liked your post`,
       icon: <Heart className="size-7 fill-red-500 text-red-500" />,
-      href: `/posts/${notification.postId}`,
+      href: notification.postId ? `/posts/${notification.postId}` : null,
     },
     REPLY: {
       message: ` replied to your comment`,
       icon: <Reply className="size-7 text-primary" />,
-      href: `/posts/${notification.postId}`,
+      href: notification.postId ? `/posts/${notification.postId}` : null,
     },
   };
 
   const { message, icon, href } = notificationTypeMap[notification.type];
 
+  // Fetch post status (check if it exists)
+  useEffect(() => {
+    async function checkPostStatus() {
+      if (notification.postId) {
+        try {
+          const response = await kyInstance
+            .get(`/api/posts/${notification.postId}`)
+            .json();
+          if (!response) {
+            setIsPostDeleted(true); // Set state if post does not exist
+          }
+        } catch (error) {
+          setIsPostDeleted(true); // Handle errors as post deleted
+        }
+      }
+    }
+    checkPostStatus();
+  }, [notification.postId]);
+
   return (
-    <Link href={href} className="block">
+    <Link
+      href={isPostDeleted || !href ? "/post-deleted" : href}
+      className="block"
+    >
       <article
         className={cn(
           "flex gap-3 rounded-md border bg-card p-5 shadow-sm transition-colors hover:bg-card/70",
@@ -53,9 +79,14 @@ export default function Notification({ notification }: NotificationProps) {
             <span className="font-bold">{notification.issuer.displayName}</span>
             <span>{message}</span>
           </div>
-          {notification.Post && (
+          {notification.Post && !isPostDeleted && (
             <div className="line-clamp-3 whitespace-pre-line text-muted-foreground">
               {notification.Post.content}
+            </div>
+          )}
+          {isPostDeleted && (
+            <div className="text-muted-foreground">
+              This post has been deleted.
             </div>
           )}
         </div>
