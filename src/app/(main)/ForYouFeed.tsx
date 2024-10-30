@@ -46,7 +46,7 @@ export default function ForYouFeed() {
   if (status === "error") {
     return (
       <p className="text-center text-destructive">
-        An error occurred while loading posts!
+        An error occurred while loading posts.
       </p>
     );
   }
