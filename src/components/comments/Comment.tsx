@@ -42,7 +42,11 @@ export default function Comment({ comment }: CommentProps) {
             <span className="w-full text-xs text-muted-foreground">
               {formatRelativeDate(comment.createdAt)}
             </span>
-            <div className="flex w-full justify-end"><CommentMoreButton comment={comment}/></div>
+            {user.id == comment.userId && (
+              <div className="flex w-full justify-end">
+                <CommentMoreButton comment={comment} />
+              </div>
+            )}
           </div>
           <div className="mt-1">{comment.content}</div>
           <div className="mt-2 flex items-center gap-2">

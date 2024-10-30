@@ -11,6 +11,7 @@ import UserAvatar from "../UserAvatar";
 import { ReplyData } from "@/lib/types";
 import { formatRelativeDate } from "@/lib/utils";
 import { MoreHorizontal, Trash2 } from "lucide-react";
+import { useSession } from "@/app/(main)/SessionProvider";
 
 interface ReplyProps {
   reply: ReplyData;
@@ -18,6 +19,7 @@ interface ReplyProps {
 }
 
 export default function Reply({ reply, onDelete }: ReplyProps) {
+  const { user } = useSession();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleDelete = () => {
@@ -51,23 +53,25 @@ export default function Reply({ reply, onDelete }: ReplyProps) {
           <span className="w-full text-xs text-muted-foreground">
             {formatRelativeDate(new Date(reply.createdAt))}
           </span>
-          <div className="flex w-full justify-end">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button size="icon" variant="ghost">
-                  <MoreHorizontal className="size-5 text-muted-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem onClick={onDelete}>
-                  <span className="flex items-center gap-3 text-destructive">
-                    <Trash2 className="size-4" />
-                    Delete
-                  </span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          {user.id == reply.userId && (
+            <div className="flex w-full justify-end">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="icon" variant="ghost">
+                    <MoreHorizontal className="size-5 text-muted-foreground" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={onDelete}>
+                    <span className="flex items-center gap-3 text-destructive">
+                      <Trash2 className="size-4" />
+                      Delete
+                    </span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
         </div>
         <p className="mt-1 text-sm sm:mt-0">{reply.content}</p>
       </div>

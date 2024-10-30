@@ -46,7 +46,7 @@ export default function ReplyList({
     };
 
     fetchReplies();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commentId]);
 
   const combinedReplies = [...replies, ...fetchedReplies].reduce<ReplyData[]>(
