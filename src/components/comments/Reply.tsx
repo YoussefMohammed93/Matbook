@@ -15,9 +15,14 @@ import { useSession } from "@/app/(main)/SessionProvider";
 interface ReplyProps {
   reply: ReplyData;
   onRequestDelete: () => void;
+  originalCommenter: { username: string; displayName: string };
 }
 
-export default function Reply({ reply, onRequestDelete }: ReplyProps) {
+export default function Reply({
+  reply,
+  onRequestDelete,
+  originalCommenter,
+}: ReplyProps) {
   const { user } = useSession();
 
   return (
@@ -56,7 +61,14 @@ export default function Reply({ reply, onRequestDelete }: ReplyProps) {
             </div>
           )}
         </div>
-        <p className="mt-1 text-sm sm:mt-0">{reply.content}</p>
+        <p className="mt-1 flex items-center gap-2 text-sm sm:mt-0">
+          <Link href={`/users/${originalCommenter.username}`}>
+            <span className="font-semibold text-primary hover:underline">
+              @{originalCommenter.displayName}
+            </span>
+          </Link>
+          {reply.content}
+        </p>
       </div>
     </div>
   );

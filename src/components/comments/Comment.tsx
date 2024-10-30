@@ -49,7 +49,7 @@ export default function Comment({ comment }: CommentProps) {
             <span className="w-full text-xs text-muted-foreground">
               {formatRelativeDate(comment.createdAt)}
             </span>
-            {user.id == comment.userId && (
+            {user?.id === comment.userId && (
               <div className="flex w-full justify-end">
                 <CommentMoreButton comment={comment} />
               </div>
@@ -76,6 +76,7 @@ export default function Comment({ comment }: CommentProps) {
           <ReplyForm commentId={comment.id} onNewReply={addReply} />
           <ReplyList
             commentId={comment.id}
+            comment={comment}
             replies={replies}
             onDeleteReply={deleteReply}
           />
