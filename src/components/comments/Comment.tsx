@@ -39,18 +39,25 @@ export default function Comment({ comment }: CommentProps) {
           <UserAvatar avatarUrl={comment.user.avatarUrl} size={40} />
         </Link>
         <div className="flex-1">
-          <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:gap-2">
-            <Link
-              href={`/users/${comment.user.username}`}
-              className="font-semibold hover:underline"
-            >
-              {comment.user.displayName}
-            </Link>
-            <span className="w-full text-xs text-muted-foreground">
-              {formatRelativeDate(comment.createdAt)}
-            </span>
+          <div className="flex items-start justify-between sm:block">
+            <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:gap-2">
+              <Link
+                href={`/users/${comment.user.username}`}
+                className="font-semibold hover:underline"
+              >
+                {comment.user.displayName}
+              </Link>
+              <span className="w-full min-w-32 text-xs text-muted-foreground">
+                {formatRelativeDate(comment.createdAt)}
+              </span>
+              {user?.id === comment.userId && (
+                <div className="hidden w-full justify-end sm:flex">
+                  <CommentMoreButton comment={comment} />
+                </div>
+              )}
+            </div>
             {user?.id === comment.userId && (
-              <div className="flex w-full justify-end">
+              <div className="flex w-full justify-end sm:hidden">
                 <CommentMoreButton comment={comment} />
               </div>
             )}
