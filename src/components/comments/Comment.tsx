@@ -8,6 +8,7 @@ import LikeButton from "./like-button";
 import { formatRelativeDate } from "@/lib/utils";
 import { CommentData, ReplyData } from "@/lib/types";
 import { useSession } from "@/app/(main)/SessionProvider";
+import CommentMoreButton from "./CommentMoreButton";
 
 interface CommentProps {
   comment: CommentData;
@@ -38,9 +39,10 @@ export default function Comment({ comment }: CommentProps) {
             >
               {comment.user.displayName}
             </Link>
-            <span className="text-xs text-muted-foreground">
+            <span className="w-full text-xs text-muted-foreground">
               {formatRelativeDate(comment.createdAt)}
             </span>
+            <div className="flex w-full justify-end"><CommentMoreButton comment={comment}/></div>
           </div>
           <div className="mt-1">{comment.content}</div>
           <div className="mt-2 flex items-center gap-2">

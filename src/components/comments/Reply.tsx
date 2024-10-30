@@ -1,8 +1,16 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import Link from "next/link";
 import { useState } from "react";
+import { Button } from "../ui/button";
 import UserAvatar from "../UserAvatar";
 import { ReplyData } from "@/lib/types";
 import { formatRelativeDate } from "@/lib/utils";
+import { MoreHorizontal, Trash2 } from "lucide-react";
 
 interface ReplyProps {
   reply: ReplyData;
@@ -40,17 +48,28 @@ export default function Reply({ reply, onDelete }: ReplyProps) {
           >
             {reply.user.displayName}
           </Link>
-          <span className="text-xs text-muted-foreground">
+          <span className="w-full text-xs text-muted-foreground">
             {formatRelativeDate(new Date(reply.createdAt))}
           </span>
+          <div className="flex w-full justify-end">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="icon" variant="ghost">
+                  <MoreHorizontal className="size-5 text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={onDelete}>
+                  <span className="flex items-center gap-3 text-destructive">
+                    <Trash2 className="size-4" />
+                    Delete
+                  </span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
         <p className="mt-1 text-sm sm:mt-0">{reply.content}</p>
-        <button
-          className="mt-2 text-sm text-red-600 hover:underline"
-          onClick={onDelete}
-        >
-          Delete
-        </button>
       </div>
     </div>
   );
