@@ -10,8 +10,8 @@ import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import Notification from "./Notification";
 import { NotificationsPage } from "@/lib/types";
+import NotificationsLoadingSkeleton from "./NotificationsLoadingSkeleton";
 import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
-import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
 
 export default function Notifications() {
   const {
@@ -55,7 +55,7 @@ export default function Notifications() {
   const notifications = data?.pages.flatMap((page) => page.notifications) || [];
 
   if (status === "pending") {
-    return <PostsLoadingSkeleton />;
+    return <NotificationsLoadingSkeleton />;
   }
 
   if (status === "success" && !notifications.length && !hasNextPage) {

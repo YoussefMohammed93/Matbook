@@ -119,7 +119,7 @@ async function TrendingTopics() {
               </div>
             </TooltipTrigger>
             <TooltipContent side="top" className="border p-3 shadow-md">
-              <p>This is updated instantly every 3 hours.</p>
+              <p>This is updated instantly every 6 hours.</p>
             </TooltipContent>
           </Tooltip>
         </div>

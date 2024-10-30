@@ -116,3 +116,11 @@
     max-width: 650px !important;
   }
 }
+
+@media (max-width: 640px) {
+  .is-empty.is-editor-empty {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
