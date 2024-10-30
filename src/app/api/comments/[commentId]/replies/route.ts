@@ -25,6 +25,21 @@ export async function POST(req: NextRequest, { params }: Params) {
       );
     }
 
+    const originalComment = await prisma.comment.findUnique({
+      where: { id: commentId },
+      select: {
+        userId: true,
+        postId: true,
+      },
+    });
+
+    if (!originalComment) {
+      return NextResponse.json(
+        { error: "Original comment not found" },
+        { status: 404 },
+      );
+    }
+
     const reply = await prisma.reply.create({
       data: {
         content,
@@ -37,6 +52,18 @@ export async function POST(req: NextRequest, { params }: Params) {
         },
       },
     });
+
+    if (user.id !== originalComment.userId) {
+      await prisma.notification.create({
+        data: {
+          recipientId: originalComment.userId,
+          issuerId: user.id,
+          type: "REPLY",
+          commentId,
+          postId: originalComment.postId,
+        },
+      });
+    }
 
     return NextResponse.json(reply, { status: 201 });
   } catch (error) {

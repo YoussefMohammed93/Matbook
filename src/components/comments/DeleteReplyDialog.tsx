@@ -35,9 +35,15 @@ export default function DeleteReplyDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="destructive" onClick={onConfirm} disabled={loading}>
-            {loading ? <Loader2 className="size-5 animate-spin" /> : "Delete"}
+          <Button
+            className="flex items-center gap-1.5"
+            variant="destructive"
+            onClick={onConfirm}
+            disabled={loading}
+          >
+            {loading && <Loader2 className="size-5 animate-spin" />} Delete
           </Button>
+
           <Button variant="outline" onClick={onClose} disabled={loading}>
             Cancel
           </Button>

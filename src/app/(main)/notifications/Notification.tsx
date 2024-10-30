@@ -22,17 +22,17 @@ export default function Notification({ notification }: NotificationProps) {
     COMMENT: {
       message: ` commented on your post`,
       icon: <MessageCircle className="size-7 fill-primary text-primary" />,
-      href: `/posts/${notification.Post?.id}`,
+      href: `/posts/${notification.postId}`,
     },
     LIKE: {
       message: ` liked your post`,
       icon: <Heart className="size-7 fill-red-500 text-red-500" />,
-      href: `/posts/${notification.Post?.id}`,
+      href: `/posts/${notification.postId}`,
     },
     REPLY: {
       message: ` replied to your comment`,
       icon: <Reply className="size-7 text-primary" />,
-      href: `/posts/${notification.Post?.id}/comments/${notification.commentId}`,
+      href: `/posts/${notification.postId}`,
     },
   };
 
@@ -55,7 +55,7 @@ export default function Notification({ notification }: NotificationProps) {
           </div>
           {notification.Post && (
             <div className="line-clamp-3 whitespace-pre-line text-muted-foreground">
-              {notification.Post.content}{" "}
+              {notification.Post.content}
             </div>
           )}
         </div>
